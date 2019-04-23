@@ -1,0 +1,66 @@
+---
+title: "Merchant Churn"
+author: "HJ"
+date: "22 April 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(survival)
+library(survminer)
+library(tidyverse)
+```
+
+## R Markdown
+
+```{r, echo=FALSE}
+data <- readr::read_csv('./merchant_preprocessed.csv')
+```
+
+
+Fit Survival model using Right censoring (assumes merchants with orders in 2016 are left-censored, thus removed).
+
+```{r}
+first_day <- min(data$first_order_timestamp)
+
+train <- data %>% 
+  filter(first_order_timestamp > "2016-12-31") %>% 
+  mutate(age_weeks = as.integer((last_order_timestamp - first_order_timestamp) / 7) + 1,
+         churn =  if_else(last_order_timestamp < " 2018-06-01", 1, 0)) %>% 
+  select(-c(first_order_timestamp, last_order_timestamp, seller_id))
+
+train %>% glimpse(60)
+```
+
+```{r weibull}
+model_aft.wei <- survreg(Surv(time=age_weeks, event=churn, type = 'right') 
+                         ~ .-age_weeks-churn-median_freight, data = train, dist = 'weibull')
+cat("AIC = ", AIC(model_aft.wei)) # 9957.303
+summary(model_aft.wei)
+```
+
+```{r exp}
+model_aft.exp <- survreg(Surv(time=age_weeks, event=churn, type = 'right') 
+                         ~ .-age_weeks-churn-median_freight, data = train, dist = 'exponential')
+cat("AIC = ", AIC(model_aft.exp)) # 9964.528
+summary(model_aft.exp)
+```
+
+Turns out that Weibull AFT model is better than Exponential AFT model. P-values are mostly significant.
+
+```{r fitted}
+# get predictions of mean, 10th & 90th quantiles
+fitted_hazards <- predict(model_aft.wei, type = "response")
+fitted_hazards_quantile <- predict(model_aft.wei, type = "quantile", p=c(0.1, 0.9))
+# get seller ids
+pred_sellers <- data %>% 
+  filter(first_order_timestamp > "2016-12-31") %>% 
+  select(seller_id)
+predictions <- tibble(seller_id = pred_sellers$seller_id,
+                      fitted = fitted_hazards,
+                      quantile_10 = fitted_hazards_quantile[,1],
+                      quantile_90 = fitted_hazards_quantile[,2])
+write_csv(predictions, "predicted_churn_weeks.csv")
+```
+
