@@ -1,0 +1,78 @@
+Building model with eps = 0.35
+No. of groups: (99,)
+ 9     9048
+ 0     8812
+ 1     8531
+ 5     7394
+ 8     6469
+ 21    5897
+ 12    5527
+ 13    5428
+ 3     4069
+ 20    3764
+ 25    3693
+ 26    3468
+ 16    3352
+ 4     3311
+ 22    3028
+ 27    2704
+ 17    2455
+ 2     2206
+ 6     1717
+ 18    1629
+ 19    1223
+ 24    1025
+ 7      984
+ 10     735
+ 23     698
+ 28     685
+ 33     605
+-1      208
+ 37      45
+ 35      29
+       ... 
+ 47       8
+ 73       8
+ 92       8
+ 39       8
+ 72       7
+ 63       7
+ 76       7
+ 52       7
+ 89       7
+ 31       6
+ 60       6
+ 45       6
+ 44       6
+ 34       6
+ 68       6
+ 96       6
+ 14       6
+ 69       6
+ 94       6
+ 90       6
+ 82       6
+ 70       5
+ 71       5
+ 97       5
+ 93       5
+ 38       5
+ 84       5
+ 49       5
+ 83       5
+ 88       5
+Length: 99, dtype: int64
+      ======================================================================================
+      Resource Usage on 2019-04-24 01:56:03.064159:
+      JobId: 840024.venus01  				 Project: _pbs_project_default 
+      Submission Host: atlas6-c01 
+      Exit Status: 0
+      NCPUs Requested: 20 				 NCPUs Used: 20
+      Memory Requested: 60gb 				 Memory Used: 84065820kb 
+      Vmem Used: 97400960kb
+      CPU Time Used: 00:06:14 
+      Walltime requested: 20:00:00 			 Walltime Used: 00:12:22
+      Submit Time:  Wed Apr 24 01:43:40 2019 		 Start Time: Wed Apr 24 01:43:40 2019 
+      End Time: Wed Apr 24 01:56:03 2019 
+      Execution Nodes Used: (atlas9-c16:ncpus=20:mem=62914560kb)
+      ======================================================================================
